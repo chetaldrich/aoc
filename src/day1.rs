@@ -1,20 +1,15 @@
-use std::fs::File;
-use std::io;
-use std::io::{BufRead, BufReader};
 use std::path::Path;
+use anyhow::{anyhow, Result};
+use crate::util::lines_from_file;
 
-fn lines_from_file(filename: impl AsRef<Path>) -> io::Result<Vec<String>> {
-  BufReader::new(File::open(filename)?).lines().collect()
-}
-
-fn average_windows(depths: &Vec<i32>) -> Vec<i32> {
+fn average_windows(depths: &[i32]) -> Vec<i32> {
   depths
     .windows(3)
     .map(|window| window.iter().sum())
     .collect()
 }
 
-fn count_increases(depths: &Vec<i32>) -> i32 {
+fn count_increases(depths: &[i32]) -> i32 {
   let mut increases = 0;
   let mut current_depth = 0;
   for depth in depths {
@@ -30,19 +25,27 @@ fn count_increases(depths: &Vec<i32>) -> i32 {
   increases
 }
 
-fn get_data() -> Vec<i32> {
+fn get_data() -> Result<Vec<i32>> {
   let data = Path::new("./data");
-  lines_from_file(data.join("day1.txt"))
-    .expect("couldn't get lines")
+  lines_from_file(data.join("day1.txt"))?
     .iter()
-    .map(|s| s.parse::<i32>().unwrap())
+    .map(|s| s.parse::<i32>().map_err(|err| anyhow!(err)))
     .collect()
 }
 
-pub fn day1_part1() -> i32 {
-  count_increases(&get_data())
+fn day1_part1() -> Result<i32> {
+  Ok(count_increases(&get_data()?))
 }
 
-pub fn day1_part2() -> i32 {
-  count_increases(&average_windows(&get_data()))
+fn day1_part2() -> Result<i32> {
+  Ok(count_increases(&average_windows(&get_data()?)))
+}
+
+pub fn day1() -> Result<()> {
+  let day1_part1 = day1_part1()?;
+  let day1_part2 = day1_part2()?;
+
+  println!("day 1 part 1 depth increases: {}", day1_part1);
+  println!("day 1 part 2 depth increases: {}", day1_part2);
+  Ok(())
 }
