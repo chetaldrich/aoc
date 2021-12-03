@@ -17,8 +17,8 @@ fn day3_part1() -> Result<usize> {
   let gamma_str = build_common_str(&counts, data.len(), '1', '0');
   let epsilon_str = build_common_str(&counts, data.len(), '0', '1');
 
-  let gamma = usize::from_str_radix(&gamma_str, 2).unwrap();
-  let epsilon = usize::from_str_radix(&epsilon_str, 2).unwrap();
+  let gamma = usize::from_str_radix(&gamma_str, 2)?;
+  let epsilon = usize::from_str_radix(&epsilon_str, 2)?;
 
   Ok(gamma * epsilon)
 }
@@ -48,10 +48,9 @@ fn build_common_str(counts: &[usize], size: usize, yes: char, no: char) -> Strin
 
 fn day3_part2() -> Result<usize> {
   let data = get_data(Path::new("./data/day3.txt"))?;
-  let oxygen = find_closest_match(data.clone(), '1', '0');
-  let carbon = find_closest_match(data, '0', '1');
-  let i = oxygen.map(|o| o * carbon.unwrap()).unwrap();
-  Ok(i)
+  let oxygen = find_closest_match(data.clone(), '1', '0')?;
+  let carbon = find_closest_match(data, '0', '1')?;
+  Ok(oxygen * carbon)
 }
 
 fn find_closest_match(mut data: Vec<String>, yes: char, no: char) -> Result<usize> {
@@ -78,9 +77,10 @@ mod tests {
   }
 
   #[test]
-  fn test_find_closest_match() {
-    let oxygen = find_closest_match(data(), '1', '0');
-    assert_eq!(oxygen.unwrap(), 23);
+  fn test_find_closest_match() -> Result<()> {
+    let oxygen = find_closest_match(data(), '1', '0')?;
+    assert_eq!(oxygen, 23);
+    Ok(())
   }
 
   #[test]
