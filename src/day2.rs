@@ -1,6 +1,6 @@
 use std::path::Path;
 use anyhow::{anyhow, Result};
-use crate::util::lines_from_file;
+use crate::util::{get_data, lines_from_file};
 
 pub fn day2() -> Result<()> {
   day2_part1()?;
@@ -8,18 +8,10 @@ pub fn day2() -> Result<()> {
   Ok(())
 }
 
-fn get_data() -> Result<Vec<String>> {
-  Ok(lines_from_file(Path::new("./data/day2.txt"))
-    .map_err(|err| anyhow!(err))?
-    .iter()
-    .map(|s| s.to_string())
-    .collect())
-}
-
 fn day2_part1() -> Result<()> {
   let mut horizontal = 0;
   let mut vertical = 0;
-  let data = get_data()?;
+  let data = get_data(Path::new("./data/day2.txt"))?;
   for line in data {
     let values = line.split(' ').collect::<Vec<&str>>();
     let movement= match values.as_slice() {
@@ -43,7 +35,7 @@ fn day2_part2() -> Result<()> {
   let mut horizontal = 0;
   let mut depth = 0;
 
-  let data = get_data()?;
+  let data = get_data(Path::new("./data/day2.txt"))?;
   for line in data {
     let values = line.split(' ').collect::<Vec<&str>>();
     let movement= match values.as_slice() {
