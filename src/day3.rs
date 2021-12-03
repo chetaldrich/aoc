@@ -55,22 +55,16 @@ fn day3_part2() -> Result<usize> {
 }
 
 fn find_closest_match(mut data: Vec<String>, yes: char, no: char) -> Result<usize> {
-  let mut result = None;
   let mut i = 0;
   while data.len() > 1 {
     let target = build_common_str(&get_counts(&*data), data.len(), yes, no).chars().nth(i).unwrap();
-    println!("{:?}, {}, {}", data, target, i);
     data = data
       .into_iter()
       .filter(|s| s.chars().nth(i).unwrap() == target)
       .collect();
     i += 1;
-    if data.len() == 1 {
-      result = Some(usize::from_str_radix(&data[0], 2).unwrap());
-      break;
-    }
   }
-  result.ok_or(anyhow!("No result found"))
+  usize::from_str_radix(&data[0], 2).map_err(|err| anyhow!("Invalid data: {}", err))
 }
 
 mod tests {
