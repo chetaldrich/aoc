@@ -3,10 +3,12 @@ use std::process;
 use anyhow::{anyhow, Result};
 use crate::day1::day1;
 use crate::day2::day2;
+use crate::day3::day3;
 
 mod day1;
 mod day2;
 mod util;
+mod day3;
 
 fn main() -> Result<()> {
   let mut args = args();
@@ -18,6 +20,7 @@ fn main() -> Result<()> {
   match day {
     1 => day1(),
     2 => day2(),
+    3 => day3(),
     _ => {
       println!("You haven't done day {}, try again.", day);
       process::exit(1);
