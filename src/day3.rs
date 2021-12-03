@@ -1,4 +1,4 @@
-use crate::util::{get_data, lines_from_file};
+use crate::util::{get_data};
 use anyhow::{anyhow, Result};
 use std::path::Path;
 
@@ -48,9 +48,8 @@ fn build_common_str(counts: &[usize], size: usize, yes: char, no: char) -> Strin
 
 fn day3_part2() -> Result<usize> {
   let data = get_data(Path::new("./data/day3.txt"))?;
-  let counts = get_counts(&data);
   let oxygen = find_closest_match(data.clone(), '1', '0');
-  let carbon = find_closest_match(data.clone(), '0', '1');
+  let carbon = find_closest_match(data, '0', '1');
   let i = oxygen.map(|o| o * carbon.unwrap()).unwrap();
   Ok(i)
 }
@@ -75,7 +74,7 @@ fn find_closest_match(mut data: Vec<String>, yes: char, no: char) -> Result<usiz
 }
 
 mod tests {
-  use crate::day3::{build_common_str, find_closest_match, get_counts};
+  use super::*;
 
   fn data() -> Vec<String> {
     vec![
