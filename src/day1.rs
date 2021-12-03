@@ -1,6 +1,6 @@
-use std::path::Path;
-use anyhow::{anyhow, Result};
 use crate::util::lines_from_file;
+use anyhow::{anyhow, Result};
+use std::path::Path;
 
 fn average_windows(depths: &[i32]) -> Vec<i32> {
   depths

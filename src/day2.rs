@@ -1,6 +1,6 @@
-use std::path::Path;
-use anyhow::{anyhow, Result};
 use crate::util::{get_data, lines_from_file};
+use anyhow::{anyhow, Result};
+use std::path::Path;
 
 pub fn day2() -> Result<()> {
   day2_part1()?;
@@ -14,16 +14,16 @@ fn day2_part1() -> Result<()> {
   let data = get_data(Path::new("./data/day2.txt"))?;
   for line in data {
     let values = line.split(' ').collect::<Vec<&str>>();
-    let movement= match values.as_slice() {
+    let movement = match values.as_slice() {
       [command, value] => (command, value.parse::<i32>()?),
-      _ => panic!("Invalid line: {:?}", line)
+      _ => panic!("Invalid line: {:?}", line),
     };
 
     match *movement.0 {
       "forward" => horizontal += movement.1,
       "down" => vertical += movement.1,
       "up" => vertical -= movement.1,
-      _ => panic!("Invalid command: {:?}", movement.0)
+      _ => panic!("Invalid command: {:?}", movement.0),
     }
   }
   println!("day 2 part 1: {}", horizontal * vertical);
@@ -38,19 +38,19 @@ fn day2_part2() -> Result<()> {
   let data = get_data(Path::new("./data/day2.txt"))?;
   for line in data {
     let values = line.split(' ').collect::<Vec<&str>>();
-    let movement= match values.as_slice() {
+    let movement = match values.as_slice() {
       [command, value] => (*command, value.parse::<i32>()?),
-      _ => panic!("Invalid line: {:?}", line)
+      _ => panic!("Invalid line: {:?}", line),
     };
 
     match movement.0 {
       "forward" => {
         horizontal += movement.1;
         depth += movement.1 * aim;
-      },
+      }
       "down" => aim += movement.1,
       "up" => aim -= movement.1,
-      _ => panic!("Invalid command: {:?}", movement.0)
+      _ => panic!("Invalid command: {:?}", movement.0),
     }
   }
 
