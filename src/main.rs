@@ -1,6 +1,7 @@
 use crate::day1::day1;
 use crate::day2::day2;
 use crate::day3::day3;
+use crate::day4::day4;
 use anyhow::{anyhow, Result};
 use std::env::args;
 use std::process;
@@ -8,6 +9,7 @@ use std::process;
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 mod util;
 
 fn main() -> Result<()> {
@@ -22,6 +24,7 @@ fn main() -> Result<()> {
     1 => day1(),
     2 => day2(),
     3 => day3(),
+    4 => day4(),
     _ => {
       println!("You haven't done day {}, try again.", day);
       process::exit(1);
