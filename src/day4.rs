@@ -4,9 +4,9 @@ use crate::util::get_data;
 
 pub fn day4() -> Result<()> {
   let part1 = day4_part1()?;
-  let _part2 = day4_part2()?;
+  let part2 = day4_part2()?;
   println!("Part 1: {}", part1);
-  println!("Part 2: ");
+  println!("Part 2: {}", part2);
   Ok(())
 }
 
@@ -48,7 +48,9 @@ fn parse_boards(data: &[String]) -> Result<Vec<Board>> {
     if line.is_empty() {
       continue;
     } else {
-      let values = line.split_whitespace().map(|s| s.parse::<u32>().map_err(|err| anyhow!(err))).into_iter().collect::<Result<Vec<u32>>>()?;
+      let values = line.split_whitespace()
+        .map(|s| s.parse::<u32>().map_err(|err| anyhow!(err)))
+        .into_iter().collect::<Result<Vec<u32>>>()?;
       current_board.push(values);
       if current_board.len() == 5 {
         let board = Board {
@@ -109,22 +111,44 @@ fn score(board: &Board) -> u32 {
   score
 }
 
+fn day4_part2() -> Result<u32> {
+  let data = get_data(Path::new("./data/day4.txt"))?;
+  let bingo = parse_data(data)?;
+  let mut boards = bingo.boards;
+  let mut final_value = None;
+
+  for value in bingo.values.iter() {
+    for mut board in &mut boards {
+      mark_board(&mut board, *value);
+    }
+    if boards.len() == 1 {
+      if check_bingo(&boards[0]) {
+        final_value = Some(*value);
+        break;
+      }
+    } else {
+      boards = boards.into_iter().filter(|board| !check_bingo(board)).collect::<Vec<Board>>();
+    }
+  }
+
+  if boards.len() == 1 {
+    Ok(score(&boards[0]) * final_value.unwrap())
+  } else {
+    Err(anyhow!("No bingo found here"))
+  }
+}
+
 fn day4_part1() -> Result<u32> {
   let data = get_data(Path::new("./data/day4.txt"))?;
   let mut bingo = parse_data(data)?;
 
   for value in bingo.values.iter() {
-    for board in &mut bingo.boards {
-      mark_board(board, *value);
-      if check_bingo(board) {
-        return Ok(score(board) * value);
+    for mut board in &mut bingo.boards {
+      mark_board(&mut board, *value);
+      if check_bingo(&board) {
+        return Ok(score(&board) * value);
       }
     }
   }
-
   Err(anyhow!("No bingo found"))
-}
-
-fn day4_part2() -> Result<()> {
-  Ok(())
 }
