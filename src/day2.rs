@@ -1,5 +1,5 @@
-use crate::util::{get_data};
-use anyhow::{Result};
+use crate::util::get_data;
+use anyhow::Result;
 use std::path::Path;
 
 pub fn day2() -> Result<()> {

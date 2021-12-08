@@ -1,4 +1,4 @@
-use crate::util::{get_data};
+use crate::util::get_data;
 use anyhow::{anyhow, Result};
 use std::path::Path;
 
@@ -56,7 +56,10 @@ fn day3_part2() -> Result<usize> {
 fn find_closest_match(mut data: Vec<String>, yes: char, no: char) -> Result<usize> {
   let mut i = 0;
   while data.len() > 1 {
-    let target = build_common_str(&get_counts(&*data), data.len(), yes, no).chars().nth(i).unwrap();
+    let target = build_common_str(&get_counts(&*data), data.len(), yes, no)
+      .chars()
+      .nth(i)
+      .unwrap();
     data = data
       .into_iter()
       .filter(|s| s.chars().nth(i).unwrap() == target)
@@ -66,14 +69,20 @@ fn find_closest_match(mut data: Vec<String>, yes: char, no: char) -> Result<usiz
   usize::from_str_radix(&data[0], 2).map_err(|err| anyhow!("Invalid data: {}", err))
 }
 
+#[cfg(test)]
 mod tests {
-  use super::*;
+
+  use anyhow::Result;
+  use crate::day3::{build_common_str, find_closest_match, get_counts};
 
   fn data() -> Vec<String> {
     vec![
       "00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000", "11001",
       "00010", "01010",
-    ].iter().map(|s| s.to_string()).collect()
+    ]
+    .iter()
+    .map(|s| s.to_string())
+    .collect()
   }
 
   #[test]
@@ -99,8 +108,11 @@ mod tests {
   #[test]
   fn test_build_str_2() {
     let data: Vec<String> = vec![
-      "11110", "10110", "10111", "10101", "11100", "10000", "11001"
-    ].iter().map(|s| s.to_string()).collect();
+      "11110", "10110", "10111", "10101", "11100", "10000", "11001",
+    ]
+    .iter()
+    .map(|s| s.to_string())
+    .collect();
     let vec = get_counts(&data);
     assert_eq!("10100", build_common_str(&vec, data.len(), '1', '0'));
   }

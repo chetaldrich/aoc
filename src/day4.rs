@@ -1,6 +1,6 @@
-use std::path::Path;
-use anyhow::{anyhow, Result};
 use crate::util::get_data;
+use anyhow::{anyhow, Result};
+use std::path::Path;
 
 pub fn day4() -> Result<()> {
   let part1 = day4_part1()?;
@@ -31,11 +31,11 @@ fn parse_data(data: Vec<String>) -> Result<Bingo> {
   match data.as_slice() {
     [first, rest @ ..] => {
       let boards = parse_boards(rest)?;
-      let values = first.split(',').map(|s| s.parse::<u32>().map_err(|err| anyhow!(err))).collect::<Result<Vec<u32>>>()?;
-      Ok(Bingo {
-        values,
-        boards,
-      })
+      let values = first
+        .split(',')
+        .map(|s| s.parse::<u32>().map_err(|err| anyhow!(err)))
+        .collect::<Result<Vec<u32>>>()?;
+      Ok(Bingo { values, boards })
     }
     _ => Err(anyhow!("Invalid data")),
   }
@@ -48,18 +48,26 @@ fn parse_boards(data: &[String]) -> Result<Vec<Board>> {
     if line.is_empty() {
       continue;
     } else {
-      let values = line.split_whitespace()
+      let values = line
+        .split_whitespace()
         .map(|s| s.parse::<u32>().map_err(|err| anyhow!(err)))
-        .into_iter().collect::<Result<Vec<u32>>>()?;
+        .into_iter()
+        .collect::<Result<Vec<u32>>>()?;
       current_board.push(values);
       if current_board.len() == 5 {
         let board = Board {
-          entries: current_board.iter().map(|row| {
-            row.iter().map(|&value| Entry {
-              value,
-              marked: false,
-            }).collect()
-          }).collect(),
+          entries: current_board
+            .iter()
+            .map(|row| {
+              row
+                .iter()
+                .map(|&value| Entry {
+                  value,
+                  marked: false,
+                })
+                .collect()
+            })
+            .collect(),
         };
         boards.push(board);
         current_board = Vec::new();
@@ -118,8 +126,8 @@ fn day4_part2() -> Result<u32> {
   let mut final_value = None;
 
   for value in bingo.values.iter() {
-    for mut board in &mut boards {
-      mark_board(&mut board, *value);
+    for board in &mut boards {
+      mark_board(board, *value);
     }
     if boards.len() == 1 {
       if check_bingo(&boards[0]) {
@@ -127,7 +135,10 @@ fn day4_part2() -> Result<u32> {
         break;
       }
     } else {
-      boards = boards.into_iter().filter(|board| !check_bingo(board)).collect::<Vec<Board>>();
+      boards = boards
+        .into_iter()
+        .filter(|board| !check_bingo(board))
+        .collect::<Vec<Board>>();
     }
   }
 
@@ -143,10 +154,10 @@ fn day4_part1() -> Result<u32> {
   let mut bingo = parse_data(data)?;
 
   for value in bingo.values.iter() {
-    for mut board in &mut bingo.boards {
-      mark_board(&mut board, *value);
-      if check_bingo(&board) {
-        return Ok(score(&board) * value);
+    for board in &mut bingo.boards {
+      mark_board(board, *value);
+      if check_bingo(board) {
+        return Ok(score(board) * value);
       }
     }
   }
