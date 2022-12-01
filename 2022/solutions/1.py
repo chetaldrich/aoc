@@ -2,7 +2,9 @@ from aocd import data
 
 def main():
     elves = delimit(data.splitlines())
-    print('Part 1:', max([sum([int(c) for c in elf]) for elf in elves]))
+    totals = [sum([int(c) for c in elf]) for elf in elves]
+    print('Part 1:', max(totals))
+    print('Part 2:', sum(sorted(totals, reverse=True)[0:3]))
 
 def delimit(lst, delimiter=''):
     delimited = []
