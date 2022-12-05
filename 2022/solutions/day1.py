@@ -15,6 +15,7 @@ def delimit(lst, delimiter=''):
         else:
             delimited.append(current_group)
             current_group = []
+    delimited.append(current_group)
     return delimited
 
 if __name__ == '__main__':
