@@ -14,44 +14,17 @@ class Head:
         return f"Head({self.position})"
 
 
-class Tail:
-    def __init__(self) -> None:
-        self.position = Vector(0, 0)
-        self.knights = [
-            Vector(first, second)
-            for first, second in permutations([2, -2, 1, -1], 2)
-            if abs(first) != abs(second)
-        ]
-        self.diag_leaps = [
-            Vector(x, y) for x, y in list(set(permutations([2, -2, -2, 2], 2)))
-        ]
-        self.two_aways = [Vector(2, 0), Vector(0, 2), Vector(-2, 0), Vector(0, -2)]
-
-    def move(self, goal_position):
-        if self.check_and_move(self.two_aways, goal_position, lambda x: x * 0.5):
-            return
-        else:
-            self.check_and_move(
-                self.knights + self.diag_leaps, goal_position, lambda x: x.sign()
-            )
-
-    def check_and_move(self, vectors, goal_position, f):
-        for vector in vectors:
-            if self.position + vector == goal_position:
-                self.position = self.position + f(vector)
-                return True
-
-    def __repr__(self) -> str:
-        return f"Tail({self.position})"
-
-
 class Vector:
     def __init__(self, x, y) -> None:
         self.position = (x, y)
 
+    @staticmethod
+    def __sign(x):
+        return -1 if x < 0 else 1
+
     def sign(self):
         x, y = self.position
-        return Vector(sign(x), sign(y))
+        return Vector(self.__sign(x), self.__sign(y))
 
     def __add__(self, o):
         return Vector(*map(operator.add, self.position, o.position))
@@ -64,6 +37,33 @@ class Vector:
 
     def __repr__(self) -> str:
         return f"{self.position}"
+
+
+class Tail:
+    knights = [
+        Vector(first, second)
+        for first, second in permutations([2, -2, 1, -1], 2)
+        if abs(first) != abs(second)
+    ]
+    diag_leaps = [Vector(x, y) for x, y in list(set(permutations([2, -2, -2, 2], 2)))]
+    two_aways = [Vector(2, 0), Vector(0, 2), Vector(-2, 0), Vector(0, -2)]
+
+    def __init__(self) -> None:
+        self.position = Vector(0, 0)
+
+    def move(self, pos):
+        self.maybe_move(self.two_aways, pos, lambda x: x * 0.5) or self.maybe_move(
+            self.knights + self.diag_leaps, pos, lambda x: x.sign()
+        )
+
+    def maybe_move(self, vectors, goal_position, f):
+        for vector in vectors:
+            if self.position + vector == goal_position:
+                self.position = self.position + f(vector)
+                return True
+
+    def __repr__(self) -> str:
+        return f"Tail({self.position})"
 
 
 class Instruction:
@@ -85,10 +85,6 @@ class Instruction:
 
     def __repr__(self) -> str:
         return f"Instruction({self.direction} {self.distance})"
-
-
-def sign(x):
-    return -1 if x < 0 else 1
 
 
 def parse(lines):
