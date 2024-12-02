@@ -1,7 +1,17 @@
 from aocd import data
+from collections import Counter
 
 def main():
     first, second = parse(data)
+    part1(first, second)
+    part2(first, second)
+
+
+def part2(first, second):
+    second = Counter(second)
+    print(sum(a * second[a] for a in first))
+
+def part1(first, second):
     result = 0
     for a, b in zip(sorted(first), sorted(second)):
         result += abs(int(a) - int(b))
