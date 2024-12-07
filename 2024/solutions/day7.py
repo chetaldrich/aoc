@@ -10,7 +10,7 @@ def concat(a, b):
     return int(str(a) + str(b))
 
 def check(left, right, ops, result=0, i=0):
-    if i == len(right):
+    if i == len(right) or result > left:
         return left == result
     for op in ops:
         if check(left, right, ops, op(result, right[i]), i + 1):
