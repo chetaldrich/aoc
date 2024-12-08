@@ -1,6 +1,5 @@
 from aocd import data
 
-
 def main():
     print(data)
 
