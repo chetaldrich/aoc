@@ -16,12 +16,15 @@ class Grid:
         }
 
     def min_path(self, start, end):
-        queue = [(0, start, (1, 0))]
+        queue = [(0, [start], (1, 0))]
         solutions = defaultdict(lambda: float("inf"))
+        seats = set()
         while queue:
-            cost, node, direction = heappop(queue)
+            cost, path, direction = heappop(queue)
+            node = path[-1]
             if node == end:
                 solutions[node] = cost
+                seats.update(path)
                 continue
             if cost >= solutions[end]:
                 continue
@@ -30,8 +33,8 @@ class Grid:
                 new_cost = cost + add_cost
                 if solutions[(neighbor, new_direction)] >= new_cost:
                     solutions[(neighbor, new_direction)] = new_cost
-                    heappush(queue, (new_cost, neighbor, new_direction))
-        return solutions[end]
+                    heappush(queue, (new_cost, path + [neighbor], new_direction))
+        return solutions[end], len(seats)
 
     def neighbors(self, node, direction, cost):
         n = [d for d in [(-1, 0), (1, 0), (0, -1), (0, 1)] if d != self.excluded_directions[direction]]
@@ -42,7 +45,9 @@ class Grid:
 
 def main():
     grid = Grid(*parse())
-    print("Part 1:", grid.min_path(grid.start, grid.end))
+    min_path_cost, seats = grid.min_path(grid.start, grid.end)
+    print("Part 1:", min_path_cost)
+    print("Part 2:", seats)
 
 def parse():
     grid = np.array([list(line) for line in data.splitlines()])
