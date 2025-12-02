@@ -5,12 +5,10 @@ from datetime import datetime
 def main():
     # Get the current year
     current_year = datetime.now().year
-    folder_path = f"{current_year}/solutions"
+    folder_path = f"{current_year}/solutions/"
 
-    # Ensure the folder exists
-    if not os.path.exists(folder_path):
-        print(f"Folder for year {current_year} does not exist.")
-        return
+    # Ensure the folder exists (create intermediate directories)
+    os.makedirs(folder_path, exist_ok=True)
 
     # Get the list of day{n}.py files
     day_files = [f for f in os.listdir(folder_path) if f.startswith("day") and f.endswith(".py")]
